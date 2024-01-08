@@ -1,0 +1,52 @@
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:we_chat/screens/auth/login_screen.dart';
+
+class SplashScreen extends StatefulWidget {
+  const SplashScreen({super.key});
+
+  @override
+  State<SplashScreen> createState() => _SplashScreenState();
+}
+
+class _SplashScreenState extends State<SplashScreen> {
+  // move to home screen
+  void moveToNextScreen() async {
+    await Future.delayed(const Duration(milliseconds: 1500));
+
+    // exit full screen
+    SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
+    SystemChrome.setSystemUIOverlayStyle(
+      const SystemUiOverlayStyle(statusBarColor: Colors.transparent),
+    );
+
+    // navigate to login screen
+    if (mounted) {
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (_) => const LoginScreen(),
+        ),
+      );
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    moveToNextScreen();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      // body
+      body: Center(
+        child: Image.asset(
+          "images/splash.png",
+          width: 140,
+        ),
+      ),
+    );
+  }
+}
