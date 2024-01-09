@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:we_chat/api/api.dart';
 import 'package:we_chat/helper/dialogs.dart';
 import 'package:we_chat/main.dart';
 import 'package:we_chat/screens/home_screen.dart';
@@ -28,8 +29,14 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   _handleGoogleButtonClick() {
+    // for showing progress bar
+    Dialogs.showProgressBar(context);
+
     _signInWithGoogle().then(
       (user) {
+        // for hiding progress bar
+        Navigator.pop(context);
+
         if (user != null) {
           log("\nUser: ${user.user}");
           log("\nUserAdditionalInfo: ${user.additionalUserInfo}");
@@ -62,11 +69,11 @@ class _LoginScreenState extends State<LoginScreen> {
       );
 
       // Once signed in, return the UserCredential
-      return await FirebaseAuth.instance.signInWithCredential(credential);
+      return await APIs.auth.signInWithCredential(credential);
     } catch (e) {
       log('\n_signInWithGoogle: $e');
       if (mounted) {
-        Dialogs.showSnackbar(context, "Something Went Wrong(Check Internet)");
+        Dialogs.showSnackbar(context, "Something Went Wrong (Check Internet!)");
       }
       return null;
     }

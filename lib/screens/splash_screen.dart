@@ -1,6 +1,10 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:we_chat/api/api.dart';
 import 'package:we_chat/screens/auth/login_screen.dart';
+import 'package:we_chat/screens/home_screen.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -20,14 +24,28 @@ class _SplashScreenState extends State<SplashScreen> {
       const SystemUiOverlayStyle(statusBarColor: Colors.transparent),
     );
 
-    // navigate to login screen
-    if (mounted) {
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(
-          builder: (_) => const LoginScreen(),
-        ),
-      );
+    if (APIs.auth.currentUser != null) {
+      log("\nUser: ${APIs.auth.currentUser}");
+
+      // navigate to home screen
+      if (mounted) {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (_) => const HomeScreen(),
+          ),
+        );
+      }
+    } else {
+      // navigate to login screen
+      if (mounted) {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (_) => const LoginScreen(),
+          ),
+        );
+      }
     }
   }
 
