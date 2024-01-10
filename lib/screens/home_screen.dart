@@ -72,6 +72,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     }),
                   );
                 } else {
+                  // when no user found
                   return const Center(
                     child: Text(
                       "No Connection Found!",
