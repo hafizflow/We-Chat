@@ -12,11 +12,25 @@ dependencies:
   flutter:
     sdk: flutter
 
-  cupertino_icons: ^1.0.2
   flutter_lints: ^3.0.1
+
+  # for using cupertion icons
+  cupertino_icons: ^1.0.2
+
+  # for integrate firebase 
   firebase_core: ^2.24.2
+
+  # for handling google sign in
   google_sign_in: ^6.2.1
+
+  # for handling firebase authentication
   firebase_auth: ^4.15.3
+
+  # for accessing cloud firestore data base 
+  cloud_firestore: ^4.14.0
+
+  # for showing network image
+  cached_network_image: ^3.3.1
 
 dev_dependencies:
   flutter_test:
