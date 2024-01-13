@@ -9,7 +9,7 @@ import 'package:we_chat/screens/auth/login_screen.dart';
 
 import '../main.dart';
 
-// profile screen - to show sign in user info
+// profile screen - to show sign in user info and more
 class ProfileScreen extends StatefulWidget {
   final ChatUser user;
 
