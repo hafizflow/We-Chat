@@ -24,8 +24,6 @@ class _ChatUserCardState extends State<ChatUserCard> {
       elevation: 5,
       child: ListTile(
         // user profile picture
-        // leading: const CircleAvatar(child: Icon(CupertinoIcons.person)),
-
         leading: ClipRRect(
           borderRadius: BorderRadius.circular(25),
           child: CachedNetworkImage(

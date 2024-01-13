@@ -26,6 +26,9 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // initializing media query (for getting device screen size)
+    mq = MediaQuery.of(context).size;
+
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'ASN Chat',
@@ -42,9 +45,42 @@ class MyApp extends StatelessWidget {
           ),
           backgroundColor: Colors.teal,
         ),
+        elevatedButtonTheme: ElevatedButtonThemeData(
+          style: ElevatedButton.styleFrom(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(8),
+            ),
+            backgroundColor: Colors.teal.shade500,
+            foregroundColor: Colors.white,
+            padding: const EdgeInsets.symmetric(
+              vertical: 14,
+              horizontal: 14,
+            ),
+            textStyle: const TextStyle(
+              fontSize: 14,
+              letterSpacing: 0.5,
+            ),
+          ),
+        ),
         floatingActionButtonTheme: const FloatingActionButtonThemeData(
           backgroundColor: Colors.teal,
           foregroundColor: Colors.white,
+        ),
+        inputDecorationTheme: const InputDecorationTheme(
+          labelStyle: TextStyle(color: Colors.teal),
+          prefixIconColor: Colors.teal,
+          enabledBorder: OutlineInputBorder(
+            borderSide: BorderSide(
+              color: Colors.teal,
+              width: 1,
+            ),
+          ),
+          focusedBorder: OutlineInputBorder(
+            borderSide: BorderSide(
+              color: Colors.teal,
+              width: 2,
+            ),
+          ),
         ),
       ),
       home: const SplashScreen(),

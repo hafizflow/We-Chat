@@ -1,8 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:google_sign_in/google_sign_in.dart';
 import 'package:we_chat/api/api.dart';
 import 'package:we_chat/models/chat_user.dart';
+import 'package:we_chat/screens/profile_screen.dart';
 import 'package:we_chat/widgets/chat_user_card.dart';
 
 // home screen - where all available contracts are shown
@@ -14,7 +14,20 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  List<ChatUser> userList = [];
+  // for storing all users
+  List<ChatUser> _userList = [];
+
+  // for storing search users
+  final List<ChatUser> _searchList = [];
+
+  // for storing search status
+  bool _isSearching = false;
+
+  @override
+  void initState() {
+    super.initState();
+    APIs.getSelfInfo();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -22,13 +35,56 @@ class _HomeScreenState extends State<HomeScreen> {
       // appbar
       appBar: AppBar(
         leading: const Icon(CupertinoIcons.home),
-        title: const Text("Asn Chat"),
+        title: _isSearching
+            ? TextField(
+                autofocus: true,
+                // where search list changed than updated search list
+                onChanged: (val) {
+                  // search logic
+                  _searchList.clear();
+                  for (var i in _userList) {
+                    if (i.name.toLowerCase().contains(val.toLowerCase()) ||
+                        i.email.toLowerCase().contains(val.toLowerCase())) {
+                      _searchList.add(i);
+                      setState(() {});
+                    }
+                  }
+                },
+                style: const TextStyle(
+                  color: Colors.white,
+                  letterSpacing: 0.5,
+                  fontSize: 17,
+                ),
+                decoration: const InputDecoration(
+                  border: InputBorder.none,
+                  hintText: "Name, Email...",
+                  hintStyle: TextStyle(
+                    color: Colors.white70,
+                  ),
+                ),
+              )
+            : const Text("Asn Chat"),
         actions: [
           // search user button
-          IconButton(onPressed: () {}, icon: const Icon(Icons.search)),
+          IconButton(
+            onPressed: () {
+              setState(() {
+                _isSearching = !_isSearching;
+              });
+            },
+            icon: Icon(
+              _isSearching ? CupertinoIcons.clear_circled_solid : Icons.search,
+            ),
+          ),
 
           // user profile button
-          IconButton(onPressed: () {}, icon: const Icon(Icons.person)),
+          IconButton(
+              onPressed: () {
+                Navigator.push(context, MaterialPageRoute(builder: (_) {
+                  return ProfileScreen(user: APIs.me);
+                }));
+              },
+              icon: const Icon(Icons.person)),
         ],
       ),
 
@@ -36,16 +92,13 @@ class _HomeScreenState extends State<HomeScreen> {
       floatingActionButton: Padding(
         padding: const EdgeInsets.only(bottom: 10),
         child: FloatingActionButton(
-          onPressed: () async {
-            await APIs.auth.signOut();
-            await GoogleSignIn().signOut();
-          },
+          onPressed: () async {},
           child: const Icon(Icons.add_comment_rounded),
         ),
       ),
 
       body: StreamBuilder(
-          stream: APIs.fireStore.collection('users').snapshots(),
+          stream: APIs.getAllUsers(),
           builder: (context, snapshot) {
             switch (snapshot.connectionState) {
               // if data is loading
@@ -57,18 +110,21 @@ class _HomeScreenState extends State<HomeScreen> {
               case ConnectionState.active:
               case ConnectionState.done:
                 final data = snapshot.data?.docs;
-                userList =
+                _userList =
                     data?.map((e) => ChatUser.fromJson(e.data())).toList() ??
                         [];
 
-                if (userList.isNotEmpty) {
+                if (_userList.isNotEmpty) {
                   return ListView.builder(
                     padding: const EdgeInsets.only(top: 6),
-                    itemCount: userList.length,
+                    itemCount:
+                        _isSearching ? _searchList.length : _userList.length,
                     physics: const BouncingScrollPhysics(),
                     itemBuilder: ((context, index) {
-                      return ChatUserCard(user: userList[index]);
-                      // return Text("Name: ${userList[index]}");
+                      return ChatUserCard(
+                          user: _isSearching
+                              ? _searchList[index]
+                              : _userList[index]);
                     }),
                   );
                 } else {
