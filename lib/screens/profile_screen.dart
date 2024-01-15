@@ -69,7 +69,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         elevation: 1,
                         color: Colors.white,
                         shape: const CircleBorder(),
-                        onPressed: () {},
+                        onPressed: () {
+                          _showBottomSheet();
+                        },
                         child: const Icon(
                           Icons.edit,
                           color: Colors.teal,
@@ -179,5 +181,41 @@ class _ProfileScreenState extends State<ProfileScreen> {
         ),
       ),
     );
+  }
+
+  // sheet for picking a profile picture for user
+  void _showBottomSheet() {
+    showModalBottomSheet(
+        context: context,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.only(
+            topLeft: Radius.circular(20),
+            topRight: Radius.circular(20),
+          ),
+        ),
+        builder: (_) {
+          return ListView(
+            shrinkWrap: true,
+            padding: EdgeInsets.only(
+              top: mq.height * 0.03,
+              bottom: mq.height * 0.05,
+            ),
+            children: [
+              Text(
+                "Pick Profile Picture",
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+              Row(
+                children: [
+                  ElevatedButton(onPressed: () {}, child: Image.asset(""))
+                ],
+              )
+            ],
+          );
+        });
   }
 }

@@ -31,113 +31,130 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      // appbar
-      appBar: AppBar(
-        leading: const Icon(CupertinoIcons.home),
-        title: _isSearching
-            ? TextField(
-                autofocus: true,
-                // where search list changed than updated search list
-                onChanged: (val) {
-                  // search logic
-                  _searchList.clear();
-                  for (var i in _userList) {
-                    if (i.name.toLowerCase().contains(val.toLowerCase()) ||
-                        i.email.toLowerCase().contains(val.toLowerCase())) {
-                      _searchList.add(i);
-                      setState(() {});
-                    }
-                  }
+    return GestureDetector(
+      // for hiding key board when a tap detected on the screen
+      onTap: () => FocusScope.of(context).unfocus(),
+
+      child: PopScope(
+        canPop: _isSearching ? false : true,
+        onPopInvoked: (_) {
+          if (_isSearching) {
+            _isSearching = !_isSearching;
+            setState(() {});
+          }
+        },
+        child: Scaffold(
+          appBar: AppBar(
+            leading: const Icon(CupertinoIcons.home),
+            title: _isSearching
+                ? TextField(
+                    autofocus: true,
+                    // where search list changed than updated search list
+                    onChanged: (val) {
+                      // search logic
+                      _searchList.clear();
+                      for (var i in _userList) {
+                        if (i.name.toLowerCase().contains(val.toLowerCase()) ||
+                            i.email.toLowerCase().contains(val.toLowerCase())) {
+                          _searchList.add(i);
+                          setState(() {});
+                        }
+                      }
+                    },
+                    style: const TextStyle(
+                      color: Colors.white,
+                      letterSpacing: 0.5,
+                      fontSize: 17,
+                    ),
+                    decoration: const InputDecoration(
+                      border: InputBorder.none,
+                      hintText: "Name, Email...",
+                      hintStyle: TextStyle(
+                        color: Colors.white70,
+                      ),
+                    ),
+                  )
+                : const Text("Asn Chat"),
+            actions: [
+              // search user button
+              IconButton(
+                onPressed: () {
+                  setState(() {
+                    _isSearching = !_isSearching;
+                  });
                 },
-                style: const TextStyle(
-                  color: Colors.white,
-                  letterSpacing: 0.5,
-                  fontSize: 17,
+                icon: Icon(
+                  _isSearching
+                      ? CupertinoIcons.clear_circled_solid
+                      : Icons.search,
                 ),
-                decoration: const InputDecoration(
-                  border: InputBorder.none,
-                  hintText: "Name, Email...",
-                  hintStyle: TextStyle(
-                    color: Colors.white70,
-                  ),
-                ),
-              )
-            : const Text("Asn Chat"),
-        actions: [
-          // search user button
-          IconButton(
-            onPressed: () {
-              setState(() {
-                _isSearching = !_isSearching;
-              });
-            },
-            icon: Icon(
-              _isSearching ? CupertinoIcons.clear_circled_solid : Icons.search,
+              ),
+
+              // user profile button
+              IconButton(
+                  onPressed: () {
+                    Navigator.push(context, MaterialPageRoute(builder: (_) {
+                      return ProfileScreen(user: APIs.me);
+                    }));
+                  },
+                  icon: const Icon(Icons.person)),
+            ],
+          ),
+
+          // floating button to add new user
+          floatingActionButton: Padding(
+            padding: const EdgeInsets.only(bottom: 10),
+            child: FloatingActionButton(
+              onPressed: () async {},
+              child: const Icon(Icons.add_comment_rounded),
             ),
           ),
 
-          // user profile button
-          IconButton(
-              onPressed: () {
-                Navigator.push(context, MaterialPageRoute(builder: (_) {
-                  return ProfileScreen(user: APIs.me);
-                }));
-              },
-              icon: const Icon(Icons.person)),
-        ],
-      ),
+          body: StreamBuilder(
+              stream: APIs.getAllUsers(),
+              builder: (context, snapshot) {
+                switch (snapshot.connectionState) {
+                  // if data is loading
+                  case ConnectionState.waiting:
+                  case ConnectionState.none:
+                    return const Center(child: CircularProgressIndicator());
 
-      // floating button to add new user
-      floatingActionButton: Padding(
-        padding: const EdgeInsets.only(bottom: 10),
-        child: FloatingActionButton(
-          onPressed: () async {},
-          child: const Icon(Icons.add_comment_rounded),
-        ),
-      ),
-
-      body: StreamBuilder(
-          stream: APIs.getAllUsers(),
-          builder: (context, snapshot) {
-            switch (snapshot.connectionState) {
-              // if data is loading
-              case ConnectionState.waiting:
-              case ConnectionState.none:
-                return const Center(child: CircularProgressIndicator());
-
-              // if some or all data is loaded than show it
-              case ConnectionState.active:
-              case ConnectionState.done:
-                final data = snapshot.data?.docs;
-                _userList =
-                    data?.map((e) => ChatUser.fromJson(e.data())).toList() ??
+                  // if some or all data is loaded than show it
+                  case ConnectionState.active:
+                  case ConnectionState.done:
+                    final data = snapshot.data?.docs;
+                    _userList = data
+                            ?.map((e) => ChatUser.fromJson(e.data()))
+                            .toList() ??
                         [];
 
-                if (_userList.isNotEmpty) {
-                  return ListView.builder(
-                    padding: const EdgeInsets.only(top: 6),
-                    itemCount:
-                        _isSearching ? _searchList.length : _userList.length,
-                    physics: const BouncingScrollPhysics(),
-                    itemBuilder: ((context, index) {
-                      return ChatUserCard(
-                          user: _isSearching
-                              ? _searchList[index]
-                              : _userList[index]);
-                    }),
-                  );
-                } else {
-                  // when no user found
-                  return const Center(
-                    child: Text(
-                      "No Connection Found!",
-                      style: TextStyle(fontSize: 20),
-                    ),
-                  );
+                    if (_userList.isNotEmpty) {
+                      return ListView.builder(
+                        padding: const EdgeInsets.only(top: 6),
+                        itemCount: _isSearching
+                            ? _searchList.length
+                            : _userList.length,
+                        physics: const BouncingScrollPhysics(),
+                        itemBuilder: ((context, index) {
+                          return ChatUserCard(
+                              user: _isSearching
+                                  ? _searchList[index]
+                                  : _userList[index]);
+                        }),
+                      );
+                    } else {
+                      // when no user found
+                      return const Center(
+                        child: Text(
+                          "No Connection Found!",
+                          style: TextStyle(fontSize: 20),
+                        ),
+                      );
+                    }
                 }
-            }
-          }),
+              }),
+        ),
+      ),
     );
   }
 }
