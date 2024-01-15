@@ -32,6 +32,12 @@ dependencies:
   # for showing network image
   cached_network_image: ^3.3.1
 
+  # for picking images
+  image_picker: ^1.0.7
+
+  # for accessing firebase storage (for uploading files)
+  firebase_storage: ^11.6.0
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
