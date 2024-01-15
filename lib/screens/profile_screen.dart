@@ -209,6 +209,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   fontWeight: FontWeight.w500,
                 ),
               ),
+              // 2 button added
               Row(
                 children: [
                   ElevatedButton(onPressed: () {}, child: Image.asset(""))
