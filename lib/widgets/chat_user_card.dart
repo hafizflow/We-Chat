@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:we_chat/models/chat_user.dart';
+import 'package:we_chat/screens/chat_screen.dart';
 
 class ChatUserCard extends StatefulWidget {
   final ChatUser user;
@@ -29,6 +30,7 @@ class _ChatUserCardState extends State<ChatUserCard> {
           child: CachedNetworkImage(
             height: 50,
             width: 50,
+            fit: BoxFit.cover,
             imageUrl: widget.user.image,
             errorWidget: (context, url, error) =>
                 const CircleAvatar(child: Icon(CupertinoIcons.person)),
@@ -55,7 +57,16 @@ class _ChatUserCardState extends State<ChatUserCard> {
         //   "12:00 PM",
         //   style: TextStyle(color: Colors.black54),
         // ),
-        onTap: () {},
+        onTap: () {
+          // for navigating to chat screen
+          Navigator.push(context, MaterialPageRoute(
+            builder: (_) {
+              return ChatScreen(
+                user: widget.user,
+              );
+            },
+          ));
+        },
       ),
     );
   }

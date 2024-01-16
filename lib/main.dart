@@ -66,22 +66,22 @@ class MyApp extends StatelessWidget {
           backgroundColor: Colors.teal,
           foregroundColor: Colors.white,
         ),
-        inputDecorationTheme: const InputDecorationTheme(
-          labelStyle: TextStyle(color: Colors.teal),
-          prefixIconColor: Colors.teal,
-          enabledBorder: OutlineInputBorder(
-            borderSide: BorderSide(
-              color: Colors.teal,
-              width: 1,
-            ),
-          ),
-          focusedBorder: OutlineInputBorder(
-            borderSide: BorderSide(
-              color: Colors.teal,
-              width: 2,
-            ),
-          ),
-        ),
+        // inputDecorationTheme: const InputDecorationTheme(
+        //   labelStyle: TextStyle(color: Colors.teal),
+        //   prefixIconColor: Colors.teal,
+        //   enabledBorder: OutlineInputBorder(
+        //     borderSide: BorderSide(
+        //       color: Colors.teal,
+        //       width: 1,
+        //     ),
+        //   ),
+        //   focusedBorder: OutlineInputBorder(
+        //     borderSide: BorderSide(
+        //       color: Colors.teal,
+        //       width: 2,
+        //     ),
+        //   ),
+        // ),
       ),
       home: const SplashScreen(),
     );
