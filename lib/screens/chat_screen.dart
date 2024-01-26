@@ -1,9 +1,12 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
+import 'package:we_chat/api/api.dart';
 import 'package:we_chat/main.dart';
 import 'package:we_chat/models/chat_user.dart';
+
+import '../models/message.dart';
+import '../widgets/message_card.dart';
 
 class ChatScreen extends StatefulWidget {
   final ChatUser user;
@@ -14,6 +17,11 @@ class ChatScreen extends StatefulWidget {
 }
 
 class _ChatScreenState extends State<ChatScreen> {
+  // for storing all message
+  List<Message> _list = [];
+
+  final _textController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -24,36 +32,40 @@ class _ChatScreenState extends State<ChatScreen> {
           flexibleSpace: _appbar(),
         ),
 
+        // background color
+        backgroundColor: Colors.teal.shade50,
+
         // body
         body: Column(
           children: [
             Expanded(
               child: StreamBuilder(
-                stream: null,
+                stream: APIs.getAllMessages(widget.user),
                 builder: (context, snapshot) {
                   switch (snapshot.connectionState) {
                     // if data is loading
                     case ConnectionState.waiting:
                     case ConnectionState.none:
-                    // return const Center(child: CircularProgressIndicator());
+                      return const Center(child: SizedBox());
 
                     // if some or all data is loaded than show it
                     case ConnectionState.active:
                     case ConnectionState.done:
-                      // final data = snapshot.data?.docs;
-                      // _userList = data
-                      //         ?.map((e) => ChatUser.fromJson(e.data()))
-                      //         .toList() ??
-                      //     [];
-
-                      final _list = [];
+                      final data = snapshot.data?.docs;
+                      _list = data
+                              ?.map((e) => Message.fromJson(e.data()))
+                              .toList() ??
+                          [];
 
                       if (_list.isNotEmpty) {
                         return ListView.builder(
                           padding: const EdgeInsets.only(top: 6),
                           physics: const BouncingScrollPhysics(),
+                          itemCount: _list.length,
                           itemBuilder: ((context, index) {
-                            return Text("Message: ${_list[index]}");
+                            return MessageCard(
+                              message: _list[index],
+                            );
                           }),
                         );
                       } else {
@@ -159,11 +171,12 @@ class _ChatScreenState extends State<ChatScreen> {
                     ),
                   ),
 
-                  const Expanded(
+                  Expanded(
                     child: TextField(
+                      controller: _textController,
                       keyboardType: TextInputType.multiline,
                       maxLines: null,
-                      decoration: InputDecoration(
+                      decoration: const InputDecoration(
                         hintText: "Message",
                         border: InputBorder.none,
                       ),
@@ -192,7 +205,12 @@ class _ChatScreenState extends State<ChatScreen> {
             ),
           ),
           IconButton(
-            onPressed: () {},
+            onPressed: () {
+              if (_textController.text.isNotEmpty) {
+                APIs.sendMessage(widget.user, _textController.text);
+                _textController.text = '';
+              }
+            },
             icon: const Icon(
               Icons.send,
               color: Colors.teal,
