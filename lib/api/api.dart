@@ -45,7 +45,7 @@ class APIs {
 
     final chatUser = ChatUser(
         image: user.photoURL.toString(),
-        about: "Hey, I am using Asn Chat",
+        about: "Hey, I am using We Chat",
         name: user.displayName.toString(),
         createdAt: time,
         id: user.uid,
@@ -141,5 +141,15 @@ class APIs {
         .collection('chats/${getConversationId(message.formId)}/messages')
         .doc(message.sent)
         .update({'read': DateTime.now().millisecondsSinceEpoch.toString()});
+  }
+
+  // get only last message of specific chat
+  static Stream<QuerySnapshot<Map<String, dynamic>>> getLastMessage(
+      ChatUser user) {
+    return fireStore
+        .collection('chats/${getConversationId(user.id)}/messages')
+        .orderBy('sent', descending: true)
+        .limit(1)
+        .snapshots();
   }
 }

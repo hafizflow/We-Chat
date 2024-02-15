@@ -74,7 +74,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                     ),
                   )
-                : const Text("Asn Chat"),
+                : const Text("We Chat"),
             actions: [
               // search user button
               IconButton(
