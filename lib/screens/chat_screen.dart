@@ -1,6 +1,9 @@
+import 'dart:io';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:we_chat/api/api.dart';
 import 'package:we_chat/main.dart';
 import 'package:we_chat/models/chat_user.dart';
@@ -162,15 +165,7 @@ class _ChatScreenState extends State<ChatScreen> {
                   borderRadius: BorderRadius.circular(16)),
               child: Row(
                 children: [
-                  // emoji button
-                  IconButton(
-                    onPressed: () {},
-                    icon: const Icon(
-                      Icons.emoji_emotions,
-                      color: Colors.teal,
-                    ),
-                  ),
-
+                  const SizedBox(width: 16),
                   Expanded(
                     child: TextField(
                       controller: _textController,
@@ -194,7 +189,17 @@ class _ChatScreenState extends State<ChatScreen> {
 
                   // tack image from camera button
                   IconButton(
-                    onPressed: () {},
+                    onPressed: () async {
+                      final ImagePicker picker = ImagePicker();
+
+                      // Capture a photo.
+                      final XFile? photo = await picker.pickImage(
+                          source: ImageSource.camera, imageQuality: 70);
+
+                      if (photo != null) {
+                        await APIs.sendChatImage(widget.user, File(photo.path));
+                      }
+                    },
                     icon: const Icon(
                       Icons.camera_alt_rounded,
                       color: Colors.teal,
@@ -207,7 +212,7 @@ class _ChatScreenState extends State<ChatScreen> {
           IconButton(
             onPressed: () {
               if (_textController.text.isNotEmpty) {
-                APIs.sendMessage(widget.user, _textController.text);
+                APIs.sendMessage(widget.user, _textController.text, Type.text);
                 _textController.text = '';
               }
             },

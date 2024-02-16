@@ -38,6 +38,7 @@ dependencies:
   # for accessing firebase storage (for uploading files)
   firebase_storage: ^11.6.0
 
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
