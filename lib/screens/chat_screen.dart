@@ -25,6 +25,9 @@ class _ChatScreenState extends State<ChatScreen> {
 
   final _textController = TextEditingController();
 
+  // for checking image is uploading or not
+  bool _isUploading = false;
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -64,6 +67,7 @@ class _ChatScreenState extends State<ChatScreen> {
                         return ListView.builder(
                           padding: const EdgeInsets.only(top: 6),
                           physics: const BouncingScrollPhysics(),
+                          reverse: true,
                           itemCount: _list.length,
                           itemBuilder: ((context, index) {
                             return MessageCard(
@@ -84,6 +88,18 @@ class _ChatScreenState extends State<ChatScreen> {
                 },
               ),
             ),
+
+            // progress indicator showing uploading
+            if (_isUploading)
+              const Align(
+                  alignment: Alignment.centerRight,
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(vertical: 16, horizontal: 24),
+                    child: CircularProgressIndicator(
+                      strokeWidth: 2,
+                      color: Colors.teal,
+                    ),
+                  )),
             _chatInput(),
           ],
         ),
@@ -180,7 +196,20 @@ class _ChatScreenState extends State<ChatScreen> {
 
                   // pick image from gallery button
                   IconButton(
-                    onPressed: () {},
+                    onPressed: () async {
+                      final ImagePicker picker = ImagePicker();
+
+                      // picking multiple images
+                      final List<XFile> images =
+                          await picker.pickMultiImage(imageQuality: 70);
+
+                      // upload and sending image one by one
+                      for (var i in images) {
+                        setState(() => _isUploading = true);
+                        await APIs.sendChatImage(widget.user, File(i.path));
+                        setState(() => _isUploading = false);
+                      }
+                    },
                     icon: const Icon(
                       Icons.image,
                       color: Colors.teal,
@@ -197,7 +226,9 @@ class _ChatScreenState extends State<ChatScreen> {
                           source: ImageSource.camera, imageQuality: 70);
 
                       if (photo != null) {
+                        setState(() => _isUploading = true);
                         await APIs.sendChatImage(widget.user, File(photo.path));
+                        setState(() => _isUploading = false);
                       }
                     },
                     icon: const Icon(
