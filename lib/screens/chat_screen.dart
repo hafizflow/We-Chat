@@ -5,6 +5,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:we_chat/api/api.dart';
+import 'package:we_chat/helper/my_date_util.dart';
 import 'package:we_chat/main.dart';
 import 'package:we_chat/models/chat_user.dart';
 
@@ -111,58 +112,74 @@ class _ChatScreenState extends State<ChatScreen> {
   Widget _appbar() {
     return InkWell(
       onTap: () {},
-      child: Row(
-        children: [
-          // back button
-          IconButton(
-            onPressed: () => Navigator.pop(context),
-            icon: const Icon(
-              Icons.arrow_back_ios,
-              color: Colors.white,
-            ),
-          ),
-
-          // user profile picture
-          ClipRRect(
-            borderRadius: BorderRadius.circular(25),
-            child: CachedNetworkImage(
-              height: mq.height * 0.045,
-              width: mq.width * 0.1,
-              fit: BoxFit.cover,
-              imageUrl: widget.user.image,
-              errorWidget: (context, url, error) =>
-                  const CircleAvatar(child: Icon(CupertinoIcons.person)),
-            ),
-          ),
-
-          const SizedBox(
-            width: 12,
-          ),
-
-          // user name and last active time
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(
-                widget.user.name,
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontSize: 16,
-                  fontWeight: FontWeight.w600,
+      child: StreamBuilder(
+          stream: APIs.getUserInfo(widget.user),
+          builder: (context, snapshot) {
+            final data = snapshot.data?.docs;
+            final list =
+                data?.map((e) => ChatUser.fromJson(e.data())).toList() ?? [];
+            return Row(
+              children: [
+                // back button
+                IconButton(
+                  onPressed: () => Navigator.pop(context),
+                  icon: const Icon(
+                    Icons.arrow_back_ios,
+                    color: Colors.white,
+                  ),
                 ),
-              ),
-              Text(
-                "Last seen not available",
-                style: TextStyle(
-                  color: Colors.grey.shade200,
-                  fontSize: 13,
+
+                // user profile picture
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(25),
+                  child: CachedNetworkImage(
+                    height: mq.height * 0.045,
+                    width: mq.width * 0.1,
+                    fit: BoxFit.cover,
+                    imageUrl:
+                        list.isNotEmpty ? list[0].image : widget.user.image,
+                    errorWidget: (context, url, error) =>
+                        const CircleAvatar(child: Icon(CupertinoIcons.person)),
+                  ),
                 ),
-              ),
-            ],
-          )
-        ],
-      ),
+
+                const SizedBox(
+                  width: 12,
+                ),
+
+                // user name and last active time
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      list.isNotEmpty ? list[0].name : widget.user.name,
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                    Text(
+                      list.isNotEmpty
+                          ? list[0].isOnline
+                              ? 'Online'
+                              : MyDateUtil.getLastActiveTime(
+                                  context: context,
+                                  lastActive: list[0].lastActive)
+                          : MyDateUtil.getLastActiveTime(
+                              context: context,
+                              lastActive: widget.user.lastActive),
+                      style: TextStyle(
+                        color: Colors.grey.shade200,
+                        fontSize: 13,
+                      ),
+                    ),
+                  ],
+                )
+              ],
+            );
+          }),
     );
   }
 
