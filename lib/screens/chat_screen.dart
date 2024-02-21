@@ -8,6 +8,7 @@ import 'package:we_chat/api/api.dart';
 import 'package:we_chat/helper/my_date_util.dart';
 import 'package:we_chat/main.dart';
 import 'package:we_chat/models/chat_user.dart';
+import 'package:we_chat/screens/view_profile_screen.dart';
 
 import '../models/message.dart';
 import '../widgets/message_card.dart';
@@ -111,7 +112,12 @@ class _ChatScreenState extends State<ChatScreen> {
   // appbar widget
   Widget _appbar() {
     return InkWell(
-      onTap: () {},
+      onTap: () {
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (_) => ViewProfileScreen(user: widget.user)));
+      },
       child: StreamBuilder(
           stream: APIs.getUserInfo(widget.user),
           builder: (context, snapshot) {

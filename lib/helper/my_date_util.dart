@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 
 class MyDateUtil {
@@ -9,8 +11,11 @@ class MyDateUtil {
   }
 
   // get last message time ( used in chat user card )
-  static String getLastMessageTime(
-      {required BuildContext context, required String time}) {
+  static String getLastMessageTime({
+    required BuildContext context,
+    required String time,
+    bool showYear = false,
+  }) {
     final DateTime sent = DateTime.fromMillisecondsSinceEpoch(int.parse(time));
     final DateTime now = DateTime.now();
 
@@ -19,8 +24,11 @@ class MyDateUtil {
         now.year == sent.year) {
       return TimeOfDay.fromDateTime(sent).format(context);
     }
+    log('${sent.day} ${_getMonth(sent)} ${sent.year}');
 
-    return '${sent.day} ${_getMonth(sent)}';
+    return showYear
+        ? '${sent.day} ${_getMonth(sent)} 2024'
+        : '${sent.day} ${_getMonth(sent)}';
   }
 
   // get month name from month no. or index
