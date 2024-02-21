@@ -80,6 +80,16 @@ class APIs {
         log('Push token: $t');
       }
     });
+
+    // for handling foreground message
+    // FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+    //   log('Got a message whilst in the foreground!');
+    //   log('Message data: ${message.data}');
+    //
+    //   if (message.notification != null) {
+    //     log('Message also contained a notification: ${message.notification}');
+    //   }
+    // });
   }
 
   // for getting all users from firestore database
@@ -226,7 +236,10 @@ class APIs {
         "notification": {
           "title": me.name, //our name should be send
           "body": msg,
-          "android_channel_id": "chats"
+          "android_channel_id": "chats",
+        },
+        "data": {
+          "some_data": "User ID: ${me.id}",
         },
       };
 

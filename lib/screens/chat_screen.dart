@@ -44,66 +44,70 @@ class _ChatScreenState extends State<ChatScreen> {
         backgroundColor: Colors.teal.shade50,
 
         // body
-        body: Column(
-          children: [
-            Expanded(
-              child: StreamBuilder(
-                stream: APIs.getAllMessages(widget.user),
-                builder: (context, snapshot) {
-                  switch (snapshot.connectionState) {
-                    // if data is loading
-                    case ConnectionState.waiting:
-                    case ConnectionState.none:
-                      return const Center(child: SizedBox());
+        body: GestureDetector(
+          onTap: () => FocusScope.of(context).unfocus(),
+          child: Column(
+            children: [
+              Expanded(
+                child: StreamBuilder(
+                  stream: APIs.getAllMessages(widget.user),
+                  builder: (context, snapshot) {
+                    switch (snapshot.connectionState) {
+                      // if data is loading
+                      case ConnectionState.waiting:
+                      case ConnectionState.none:
+                        return const Center(child: SizedBox());
 
-                    // if some or all data is loaded than show it
-                    case ConnectionState.active:
-                    case ConnectionState.done:
-                      final data = snapshot.data?.docs;
-                      _list = data
-                              ?.map((e) => Message.fromJson(e.data()))
-                              .toList() ??
-                          [];
+                      // if some or all data is loaded than show it
+                      case ConnectionState.active:
+                      case ConnectionState.done:
+                        final data = snapshot.data?.docs;
+                        _list = data
+                                ?.map((e) => Message.fromJson(e.data()))
+                                .toList() ??
+                            [];
 
-                      if (_list.isNotEmpty) {
-                        return ListView.builder(
-                          padding: const EdgeInsets.only(top: 6),
-                          physics: const BouncingScrollPhysics(),
-                          reverse: true,
-                          itemCount: _list.length,
-                          itemBuilder: ((context, index) {
-                            return MessageCard(
-                              message: _list[index],
-                            );
-                          }),
-                        );
-                      } else {
-                        // when no user found
-                        return const Center(
-                          child: Text(
-                            "Say Hii 👋",
-                            style: TextStyle(fontSize: 20),
-                          ),
-                        );
-                      }
-                  }
-                },
+                        if (_list.isNotEmpty) {
+                          return ListView.builder(
+                            padding: const EdgeInsets.only(top: 6),
+                            physics: const BouncingScrollPhysics(),
+                            reverse: true,
+                            itemCount: _list.length,
+                            itemBuilder: ((context, index) {
+                              return MessageCard(
+                                message: _list[index],
+                              );
+                            }),
+                          );
+                        } else {
+                          // when no user found
+                          return const Center(
+                            child: Text(
+                              "Say Hii 👋",
+                              style: TextStyle(fontSize: 20),
+                            ),
+                          );
+                        }
+                    }
+                  },
+                ),
               ),
-            ),
 
-            // progress indicator showing uploading
-            if (_isUploading)
-              const Align(
-                  alignment: Alignment.centerRight,
-                  child: Padding(
-                    padding: EdgeInsets.symmetric(vertical: 16, horizontal: 24),
-                    child: CircularProgressIndicator(
-                      strokeWidth: 2,
-                      color: Colors.teal,
-                    ),
-                  )),
-            _chatInput(),
-          ],
+              // progress indicator showing uploading
+              if (_isUploading)
+                const Align(
+                    alignment: Alignment.centerRight,
+                    child: Padding(
+                      padding:
+                          EdgeInsets.symmetric(vertical: 16, horizontal: 24),
+                      child: CircularProgressIndicator(
+                        strokeWidth: 2,
+                        color: Colors.teal,
+                      ),
+                    )),
+              _chatInput(),
+            ],
+          ),
         ),
       ),
     );
