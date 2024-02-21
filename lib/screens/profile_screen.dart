@@ -69,11 +69,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
                         // image from server
                         ClipRRect(
-                            borderRadius: BorderRadius.circular(100),
+                            borderRadius: BorderRadius.circular(mq.height * .1),
                             child: CachedNetworkImage(
                               fit: BoxFit.cover,
-                              height: 200,
-                              width: 200,
+                              height: mq.height * .2,
+                              width: mq.height * .2,
                               imageUrl: widget.user.image,
                               errorWidget: (context, url, error) =>
                                   const CircleAvatar(

@@ -29,6 +29,7 @@ class _ViewProfileScreenState extends State<ViewProfileScreen> {
           title: Text(widget.user.name),
         ),
 
+        // show joined time
         floatingActionButton: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
@@ -45,7 +46,10 @@ class _ViewProfileScreenState extends State<ViewProfileScreen> {
                 time: widget.user.createdAt,
                 showYear: true,
               ),
-              style: const TextStyle(color: Colors.black54, fontSize: 16),
+              style: const TextStyle(
+                color: Colors.black54,
+                fontSize: 16,
+              ),
             ),
           ],
         ),
@@ -64,11 +68,11 @@ class _ViewProfileScreenState extends State<ViewProfileScreen> {
                 children: [
                   // profile picture
                   ClipRRect(
-                    borderRadius: BorderRadius.circular(100),
+                    borderRadius: BorderRadius.circular(mq.height * .1),
                     child: CachedNetworkImage(
                       fit: BoxFit.cover,
-                      height: 200,
-                      width: 200,
+                      height: mq.height * .2,
+                      width: mq.height * .2,
                       imageUrl: widget.user.image,
                       errorWidget: (context, url, error) => const CircleAvatar(
                           child: Icon(CupertinoIcons.person)),
@@ -102,7 +106,10 @@ class _ViewProfileScreenState extends State<ViewProfileScreen> {
                   ),
                   Text(
                     widget.user.about,
-                    style: const TextStyle(color: Colors.black54, fontSize: 16),
+                    style: const TextStyle(
+                      color: Colors.black54,
+                      fontSize: 16,
+                    ),
                   ),
                 ],
               ),

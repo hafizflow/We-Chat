@@ -24,7 +24,8 @@ class MyDateUtil {
         now.year == sent.year) {
       return TimeOfDay.fromDateTime(sent).format(context);
     }
-    log('${sent.day} ${_getMonth(sent)} ${sent.year}');
+
+    log(sent.toString());
 
     return showYear
         ? '${sent.day} ${_getMonth(sent)} 2024'

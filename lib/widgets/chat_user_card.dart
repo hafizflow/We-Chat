@@ -5,6 +5,7 @@ import 'package:we_chat/api/api.dart';
 import 'package:we_chat/helper/my_date_util.dart';
 import 'package:we_chat/models/chat_user.dart';
 import 'package:we_chat/screens/chat_screen.dart';
+import 'package:we_chat/widgets/profile_dialog.dart';
 
 import '../models/message.dart';
 
@@ -40,15 +41,24 @@ class _ChatUserCardState extends State<ChatUserCard> {
 
           return ListTile(
             // user profile picture
-            leading: ClipRRect(
-              borderRadius: BorderRadius.circular(25),
-              child: CachedNetworkImage(
-                height: 50,
-                width: 50,
-                fit: BoxFit.cover,
-                imageUrl: widget.user.image,
-                errorWidget: (context, url, error) =>
-                    const CircleAvatar(child: Icon(CupertinoIcons.person)),
+            leading: InkWell(
+              onTap: () {
+                showDialog(
+                    context: context,
+                    builder: (_) => ProfileDialog(
+                          user: widget.user,
+                        ));
+              },
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(25),
+                child: CachedNetworkImage(
+                  height: 50,
+                  width: 50,
+                  fit: BoxFit.cover,
+                  imageUrl: widget.user.image,
+                  errorWidget: (context, url, error) =>
+                      const CircleAvatar(child: Icon(CupertinoIcons.person)),
+                ),
               ),
             ),
 
