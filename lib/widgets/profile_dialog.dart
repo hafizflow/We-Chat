@@ -60,6 +60,7 @@ class ProfileDialog extends StatelessWidget {
                 minWidth: 0,
                 shape: const CircleBorder(),
                 onPressed: () {
+                  Navigator.pop(context);
                   Navigator.push(
                     context,
                     MaterialPageRoute(

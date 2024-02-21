@@ -1,9 +1,12 @@
+import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:http/http.dart';
 import 'package:we_chat/models/chat_user.dart';
 import 'package:we_chat/models/message.dart';
 
@@ -28,11 +31,15 @@ class APIs {
     return (await fireStore.collection("users").doc(user.uid).get()).exists;
   }
 
+  // for getting self info
   static Future<void> getSelfInfo() async {
     await fireStore.collection("users").doc(user.uid).get().then((user) async {
       if (user.exists) {
         me = ChatUser.fromJson(user.data()!);
-        log("My Data: ${user.data()}");
+        await getFirebaseMessagingToken();
+
+        // for setting user status to active
+        APIs.updateActiveStatus(true);
       } else {
         await createUser().then((value) => getSelfInfo());
       }
@@ -58,6 +65,21 @@ class APIs {
         .collection("users")
         .doc(user.uid)
         .set(chatUser.toJson());
+  }
+
+  // for accessing firebase messaging (push notification)
+  static FirebaseMessaging fMessaging = FirebaseMessaging.instance;
+
+  // for getting firebase messaging token
+  static Future<void> getFirebaseMessagingToken() async {
+    await fMessaging.requestPermission();
+
+    await fMessaging.getToken().then((t) {
+      if (t != null) {
+        me.pushToken = t;
+        log('Push token: $t');
+      }
+    });
   }
 
   // for getting all users from firestore database
@@ -134,7 +156,8 @@ class APIs {
     final ref = fireStore
         .collection('chats/${getConversationId(chatUser.id)}/messages');
 
-    await ref.doc(time).set(message.toJson());
+    await ref.doc(time).set(message.toJson()).then((value) =>
+        sendPushNotification(chatUser, type == Type.text ? msg : 'image'));
   }
 
   // update read status of message
@@ -190,6 +213,37 @@ class APIs {
     fireStore.collection('users').doc(user.uid).update({
       'is_online': isOnline,
       'last_active': DateTime.now().millisecondsSinceEpoch.toString(),
+      'push_token': me.pushToken,
     });
+  }
+
+  // for sending push notification
+  static Future<void> sendPushNotification(
+      ChatUser chatUser, String msg) async {
+    try {
+      final body = {
+        "to": chatUser.pushToken,
+        "notification": {
+          "title": me.name, //our name should be send
+          "body": msg,
+          "android_channel_id": "chats"
+        },
+      };
+
+      var url = Uri.https('example.com', 'whatsit/create');
+      var response =
+          await post(Uri.parse('https://fcm.googleapis.com/fcm/send'),
+              headers: {
+                HttpHeaders.contentTypeHeader: 'application/json',
+                HttpHeaders.authorizationHeader:
+                    'key=AAAA9QIAvo0:APA91bGghkNp3gj2mLJYmaJGhttoz07ZOBx8T09AeLTObHR5whdK30SvaaHxrjz57_HHJ8Ks4hCJdZw0D6woIyWDQQtK-dH_EvhcxfjOlVNTt6TMLRj4izYW7CDRm3peXFakaZDWpu2H',
+              },
+              body: jsonEncode(body));
+
+      log('Response status: ${response.statusCode}');
+      log('Response body: ${response.body}');
+    } catch (e) {
+      log('\nErrorMessage: $e');
+    }
   }
 }

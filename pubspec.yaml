@@ -38,6 +38,12 @@ dependencies:
   # for accessing firebase storage (for uploading files)
   firebase_storage: ^11.6.0
 
+  # for push notification
+  firebase_messaging: ^14.7.16
+
+  # for http
+  http: ^1.1.2
+
 
 dev_dependencies:
   flutter_test:
