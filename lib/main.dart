@@ -35,7 +35,7 @@ class MyApp extends StatelessWidget {
 
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'ASN Chat',
+      title: 'We Chat',
       theme: ThemeData(
         appBarTheme: const AppBarTheme(
           elevation: 10,

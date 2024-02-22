@@ -7,6 +7,7 @@ class Dialogs {
         content: Text(message),
         backgroundColor: Colors.blue.withOpacity(0.8),
         behavior: SnackBarBehavior.floating,
+        dismissDirection: DismissDirection.horizontal,
       ),
     );
   }

@@ -44,70 +44,66 @@ class _ChatScreenState extends State<ChatScreen> {
         backgroundColor: Colors.teal.shade50,
 
         // body
-        body: GestureDetector(
-          onTap: () => FocusScope.of(context).unfocus(),
-          child: Column(
-            children: [
-              Expanded(
-                child: StreamBuilder(
-                  stream: APIs.getAllMessages(widget.user),
-                  builder: (context, snapshot) {
-                    switch (snapshot.connectionState) {
-                      // if data is loading
-                      case ConnectionState.waiting:
-                      case ConnectionState.none:
-                        return const Center(child: SizedBox());
+        body: Column(
+          children: [
+            Expanded(
+              child: StreamBuilder(
+                stream: APIs.getAllMessages(widget.user),
+                builder: (context, snapshot) {
+                  switch (snapshot.connectionState) {
+                    // if data is loading
+                    case ConnectionState.waiting:
+                    case ConnectionState.none:
+                      return const Center(child: SizedBox());
 
-                      // if some or all data is loaded than show it
-                      case ConnectionState.active:
-                      case ConnectionState.done:
-                        final data = snapshot.data?.docs;
-                        _list = data
-                                ?.map((e) => Message.fromJson(e.data()))
-                                .toList() ??
-                            [];
+                    // if some or all data is loaded than show it
+                    case ConnectionState.active:
+                    case ConnectionState.done:
+                      final data = snapshot.data?.docs;
+                      _list = data
+                              ?.map((e) => Message.fromJson(e.data()))
+                              .toList() ??
+                          [];
 
-                        if (_list.isNotEmpty) {
-                          return ListView.builder(
-                            padding: const EdgeInsets.only(top: 6),
-                            physics: const BouncingScrollPhysics(),
-                            reverse: true,
-                            itemCount: _list.length,
-                            itemBuilder: ((context, index) {
-                              return MessageCard(
-                                message: _list[index],
-                              );
-                            }),
-                          );
-                        } else {
-                          // when no user found
-                          return const Center(
-                            child: Text(
-                              "Say Hii 👋",
-                              style: TextStyle(fontSize: 20),
-                            ),
-                          );
-                        }
-                    }
-                  },
-                ),
+                      if (_list.isNotEmpty) {
+                        return ListView.builder(
+                          padding: const EdgeInsets.only(top: 6),
+                          physics: const BouncingScrollPhysics(),
+                          reverse: true,
+                          itemCount: _list.length,
+                          itemBuilder: ((context, index) {
+                            return MessageCard(
+                              message: _list[index],
+                            );
+                          }),
+                        );
+                      } else {
+                        // when no user found
+                        return const Center(
+                          child: Text(
+                            "Say Hii 👋",
+                            style: TextStyle(fontSize: 20),
+                          ),
+                        );
+                      }
+                  }
+                },
               ),
+            ),
 
-              // progress indicator showing uploading
-              if (_isUploading)
-                const Align(
-                    alignment: Alignment.centerRight,
-                    child: Padding(
-                      padding:
-                          EdgeInsets.symmetric(vertical: 16, horizontal: 24),
-                      child: CircularProgressIndicator(
-                        strokeWidth: 2,
-                        color: Colors.teal,
-                      ),
-                    )),
-              _chatInput(),
-            ],
-          ),
+            // progress indicator showing uploading
+            if (_isUploading)
+              const Align(
+                  alignment: Alignment.centerRight,
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(vertical: 16, horizontal: 24),
+                    child: CircularProgressIndicator(
+                      strokeWidth: 2,
+                      color: Colors.teal,
+                    ),
+                  )),
+            _chatInput(),
+          ],
         ),
       ),
     );
@@ -207,6 +203,7 @@ class _ChatScreenState extends State<ChatScreen> {
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(16)),
               child: Row(
+                crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
                   const SizedBox(width: 16),
                   Expanded(
@@ -270,7 +267,8 @@ class _ChatScreenState extends State<ChatScreen> {
           IconButton(
             onPressed: () {
               if (_textController.text.isNotEmpty) {
-                APIs.sendMessage(widget.user, _textController.text, Type.text);
+                APIs.sendMessage(
+                    widget.user, _textController.text.trim(), Type.text);
                 _textController.text = '';
               }
             },
@@ -283,5 +281,11 @@ class _ChatScreenState extends State<ChatScreen> {
         ],
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _textController.dispose();
   }
 }
