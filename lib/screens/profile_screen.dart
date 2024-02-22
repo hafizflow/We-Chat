@@ -181,18 +181,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
               // for showing progress dialogs
               const SpinKitSpinningLines(color: Colors.teal);
 
-              //
               await APIs.updateActiveStatus(false);
 
-              // sign out from app
+              // Sign out from app
               await APIs.auth.signOut().then(
                 (value) async {
                   await GoogleSignIn().signOut().then((value) {
                     // for hiding progress dialogs
-                    Navigator.pop(context);
-
-                    // for moving to home screen
-                    Navigator.pop(context);
+                    Navigator.of(context).popUntil((route) => route.isFirst);
 
                     APIs.auth = FirebaseAuth.instance;
 

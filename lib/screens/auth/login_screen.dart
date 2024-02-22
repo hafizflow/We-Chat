@@ -37,7 +37,11 @@ class _LoginScreenState extends State<LoginScreen> {
     _signInWithGoogle().then(
       (user) async {
         // for hiding progress bar
-        Navigator.pop(context);
+        Future.delayed(const Duration(milliseconds: 500), () {
+          if (Navigator.canPop(context)) {
+            Navigator.pop(context);
+          }
+        });
 
         if (user != null) {
           if ((await APIs.userExists())) {
