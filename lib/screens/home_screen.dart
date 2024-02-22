@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:we_chat/api/api.dart';
 import 'package:we_chat/models/chat_user.dart';
 import 'package:we_chat/screens/profile_screen.dart';
@@ -143,7 +144,8 @@ class _HomeScreenState extends State<HomeScreen> {
                   // if data is loading
                   case ConnectionState.waiting:
                   case ConnectionState.none:
-                    return const Center(child: CircularProgressIndicator());
+                    return const Center(
+                        child: SpinKitSpinningLines(color: Colors.teal));
 
                   // if some or all data is loaded than show it
                   case ConnectionState.active:
