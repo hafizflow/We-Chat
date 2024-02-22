@@ -1,6 +1,9 @@
+import 'dart:developer';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:gallery_saver_updated/gallery_saver.dart';
 import 'package:we_chat/api/api.dart';
 import 'package:we_chat/helper/dialogs.dart';
 import 'package:we_chat/helper/my_date_util.dart';
@@ -244,7 +247,24 @@ class _MessageCardState extends State<MessageCard> {
                         size: 26,
                       ),
                       name: "Save Image",
-                      onTap: () {},
+                      onTap: () async {
+                        try {
+                          log('Path: ${widget.message.msg}');
+                          await GallerySaver.saveImage(
+                            widget.message.msg,
+                            albumName: 'We Chat',
+                          ).then((success) {
+                            // for hiding bottom sheet
+                            Navigator.pop(context);
+
+                            if (success != null && success) {
+                              Dialogs.showSnackbar(context, 'Saved to gallery');
+                            }
+                          });
+                        } catch (e) {
+                          log('Error on saved image: $e');
+                        }
+                      },
                     ),
               if (isMe)
                 Divider(
@@ -262,7 +282,11 @@ class _MessageCardState extends State<MessageCard> {
                     size: 26,
                   ),
                   name: "Edit Message",
-                  onTap: () {},
+                  onTap: () {
+                    Navigator.pop(context);
+
+                    _showMessageDialog(context);
+                  },
                 ),
 
               // delete option
@@ -322,6 +346,72 @@ class _MessageCardState extends State<MessageCard> {
             ],
           );
         });
+  }
+
+  // dialog for updating message content
+  void _showMessageDialog(BuildContext context) {
+    String updatedMessage = widget.message.msg;
+
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        contentPadding:
+            const EdgeInsets.only(bottom: 10, left: 24, right: 24, top: 20),
+        title: const Row(
+          children: [
+            Icon(Icons.message, size: 28, color: Colors.teal),
+            Text(
+              '   Edit Message',
+              style: TextStyle(
+                color: Colors.black54,
+                letterSpacing: .5,
+              ),
+            )
+          ],
+        ),
+        content: TextFormField(
+          initialValue: updatedMessage,
+          maxLines: null,
+          onChanged: (value) => updatedMessage = value,
+          decoration: InputDecoration(
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(15),
+            ),
+          ),
+        ),
+        actions: [
+          MaterialButton(
+            padding: const EdgeInsets.only(right: 16),
+            minWidth: 0,
+            onPressed: () {
+              Navigator.pop(context);
+            },
+            child: Text(
+              'Cancel',
+              style: TextStyle(
+                color: Colors.red.shade700,
+                fontSize: 16,
+              ),
+            ),
+          ),
+          MaterialButton(
+            padding: const EdgeInsets.all(0),
+            minWidth: 0,
+            onPressed: () {
+              Navigator.pop(context);
+              APIs.editMessage(widget.message, updatedMessage);
+            },
+            child: const Text(
+              'Update',
+              style: TextStyle(
+                color: Colors.blue,
+                fontSize: 16,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
   }
 }
 

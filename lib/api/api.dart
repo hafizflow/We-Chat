@@ -243,7 +243,7 @@ class APIs {
         },
       };
 
-      var url = Uri.https('example.com', 'whatsit/create');
+      // var url = Uri.https('example.com', 'whatsit/create');
       var response =
           await post(Uri.parse('https://fcm.googleapis.com/fcm/send'),
               headers: {
@@ -260,6 +260,7 @@ class APIs {
     }
   }
 
+  // delete message
   static Future<void> deleteMessage(Message message) async {
     await fireStore
         .collection('chats/${getConversationId(message.toId)}/messages')
@@ -269,5 +270,13 @@ class APIs {
     if (message.type == Type.image) {
       await storage.refFromURL(message.msg).delete();
     }
+  }
+
+  // edit message
+  static Future<void> editMessage(Message message, String updateMessage) async {
+    await fireStore
+        .collection('chats/${getConversationId(message.toId)}/messages')
+        .doc(message.sent)
+        .update({'msg': updateMessage});
   }
 }
