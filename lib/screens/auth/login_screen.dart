@@ -3,9 +3,9 @@ import 'dart:io';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:we_chat/api/api.dart';
-import 'package:we_chat/helper/dialogs.dart';
 import 'package:we_chat/main.dart';
 import 'package:we_chat/screens/home_screen.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -31,7 +31,8 @@ class _LoginScreenState extends State<LoginScreen> {
 
   _handleGoogleButtonClick() {
     // for showing progress bar
-    Dialogs.showProgressBar(context);
+    // Dialogs.showProgressBar(context);
+    const SpinKitSpinningLines(color: Colors.teal);
 
     _signInWithGoogle().then(
       (user) async {
@@ -39,9 +40,6 @@ class _LoginScreenState extends State<LoginScreen> {
         Navigator.pop(context);
 
         if (user != null) {
-          // log("\nUser: ${user.user}");
-          // log("\nUserAdditionalInfo: ${user.additionalUserInfo}");
-
           if ((await APIs.userExists())) {
             if (mounted) {
               Navigator.pushReplacement(
