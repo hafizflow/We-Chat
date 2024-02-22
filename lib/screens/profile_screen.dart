@@ -156,9 +156,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           Fluttertoast.showToast(
                             msg: "Profile updated successfully",
                             toastLength: Toast.LENGTH_SHORT,
-                            gravity: ToastGravity.CENTER,
+                            gravity: ToastGravity.BOTTOM,
                             timeInSecForIosWeb: 2,
-                            backgroundColor: Colors.red,
+                            backgroundColor: Colors.black,
                             textColor: Colors.white,
                             fontSize: 16.0,
                           );

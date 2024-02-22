@@ -94,9 +94,9 @@ class _LoginScreenState extends State<LoginScreen> {
         Fluttertoast.showToast(
           msg: "Something Went Wrong (Check Internet!)",
           toastLength: Toast.LENGTH_SHORT,
-          gravity: ToastGravity.CENTER,
+          gravity: ToastGravity.BOTTOM,
           timeInSecForIosWeb: 2,
-          backgroundColor: Colors.red,
+          backgroundColor: Colors.black,
           textColor: Colors.white,
           fontSize: 16.0,
         );

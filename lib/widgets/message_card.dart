@@ -239,7 +239,7 @@ class _MessageCardState extends State<MessageCard> {
                             Fluttertoast.showToast(
                               msg: "Text copied to clipboard",
                               toastLength: Toast.LENGTH_SHORT,
-                              gravity: ToastGravity.CENTER,
+                              gravity: ToastGravity.BOTTOM,
                               timeInSecForIosWeb: 2,
                               backgroundColor: Colors.red,
                               textColor: Colors.white,
@@ -270,9 +270,9 @@ class _MessageCardState extends State<MessageCard> {
                               Fluttertoast.showToast(
                                 msg: "Saved to Gallery",
                                 toastLength: Toast.LENGTH_SHORT,
-                                gravity: ToastGravity.CENTER,
+                                gravity: ToastGravity.BOTTOM,
                                 timeInSecForIosWeb: 2,
-                                backgroundColor: Colors.red,
+                                backgroundColor: Colors.teal,
                                 textColor: Colors.white,
                                 fontSize: 16.0,
                               );
@@ -323,9 +323,9 @@ class _MessageCardState extends State<MessageCard> {
                       Fluttertoast.showToast(
                         msg: "Message Deleted",
                         toastLength: Toast.LENGTH_SHORT,
-                        gravity: ToastGravity.CENTER,
+                        gravity: ToastGravity.BOTTOM,
                         timeInSecForIosWeb: 2,
-                        backgroundColor: Colors.red,
+                        backgroundColor: Colors.black,
                         textColor: Colors.white,
                         fontSize: 16.0,
                       );
@@ -428,9 +428,9 @@ class _MessageCardState extends State<MessageCard> {
                 Fluttertoast.showToast(
                   msg: "Message Edited",
                   toastLength: Toast.LENGTH_SHORT,
-                  gravity: ToastGravity.CENTER,
+                  gravity: ToastGravity.BOTTOM,
                   timeInSecForIosWeb: 2,
-                  backgroundColor: Colors.red,
+                  backgroundColor: Colors.black,
                   textColor: Colors.white,
                   fontSize: 16.0,
                 );
