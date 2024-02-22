@@ -26,10 +26,11 @@ class ProfileDialog extends StatelessWidget {
               top: mq.height * .075,
               left: mq.width * .1,
               child: ClipRRect(
-                borderRadius: BorderRadius.circular(mq.height * .25),
+                borderRadius: BorderRadius.circular(100),
                 child: CachedNetworkImage(
                   fit: BoxFit.cover,
-                  width: mq.width * .5,
+                  width: 200,
+                  height: 200,
                   imageUrl: user.image,
                   errorWidget: (context, url, error) =>
                       const CircleAvatar(child: Icon(CupertinoIcons.person)),
