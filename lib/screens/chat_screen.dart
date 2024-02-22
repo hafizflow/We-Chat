@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:we_chat/api/api.dart';
 import 'package:we_chat/helper/my_date_util.dart';
@@ -97,8 +98,7 @@ class _ChatScreenState extends State<ChatScreen> {
                   alignment: Alignment.centerRight,
                   child: Padding(
                     padding: EdgeInsets.symmetric(vertical: 16, horizontal: 24),
-                    child: CircularProgressIndicator(
-                      strokeWidth: 2,
+                    child: SpinKitSpinningLines(
                       color: Colors.teal,
                     ),
                   )),

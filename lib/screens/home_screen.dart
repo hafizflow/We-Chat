@@ -129,7 +129,9 @@ class _HomeScreenState extends State<HomeScreen> {
           floatingActionButton: Padding(
             padding: const EdgeInsets.only(bottom: 10),
             child: FloatingActionButton(
-              onPressed: () async {},
+              onPressed: () {
+                _addChatUserDialog(context);
+              },
               child: const Icon(Icons.add_comment_rounded),
             ),
           ),
@@ -178,6 +180,90 @@ class _HomeScreenState extends State<HomeScreen> {
                 }
               }),
         ),
+      ),
+    );
+  }
+
+  void _addChatUserDialog(BuildContext context) {
+    String email = '';
+
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        contentPadding: const EdgeInsets.only(
+          bottom: 10,
+          left: 24,
+          right: 24,
+          top: 20,
+        ),
+        title: const Row(
+          children: [
+            Icon(Icons.message, size: 28, color: Colors.teal),
+            Text(
+              '   Add User',
+              style: TextStyle(
+                color: Colors.black54,
+                letterSpacing: .5,
+              ),
+            )
+          ],
+        ),
+        content: TextFormField(
+          maxLines: null,
+          onChanged: (value) => email = value,
+          decoration: InputDecoration(
+            hintText: 'Email Id',
+            hintStyle: const TextStyle(color: Colors.black54),
+            prefixIcon: Icon(
+              Icons.email_outlined,
+              color: Colors.teal.shade400,
+            ),
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(15),
+              borderSide: const BorderSide(color: Colors.teal),
+            ),
+            focusedBorder: const OutlineInputBorder(
+              borderSide: BorderSide(color: Colors.teal),
+            ),
+          ),
+        ),
+        actions: [
+          MaterialButton(
+            padding: const EdgeInsets.only(right: 16),
+            minWidth: 0,
+            onPressed: () {
+              Navigator.pop(context);
+            },
+            child: Text(
+              'Cancel',
+              style: TextStyle(
+                color: Colors.red.shade900,
+                fontSize: 16,
+              ),
+            ),
+          ),
+          MaterialButton(
+            padding: const EdgeInsets.all(0),
+            minWidth: 0,
+            onPressed: () async {
+              Navigator.pop(context);
+              // if (email.isNotEmpty) {
+              //   await APIs.addChatUser(email).then((value) {
+              //     if (!value) {
+              //       Dialogs.showSnackbar(context, 'User does not exists');
+              //     }
+              //   });
+              // }
+            },
+            child: const Text(
+              'Add',
+              style: TextStyle(
+                color: Colors.teal,
+                fontSize: 16,
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }

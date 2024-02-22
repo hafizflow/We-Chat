@@ -4,6 +4,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:we_chat/api/api.dart';
@@ -151,10 +152,17 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     onPressed: () {
                       if (_formKey.currentState!.validate()) {
                         _formKey.currentState!.save();
-                        APIs.updateUserInfo().then(
-                          (value) => Dialogs.showSnackbar(
-                              context, "Profile update successfully"),
-                        );
+                        APIs.updateUserInfo().then((value) {
+                          Fluttertoast.showToast(
+                            msg: "Profile updated successfully",
+                            toastLength: Toast.LENGTH_SHORT,
+                            gravity: ToastGravity.CENTER,
+                            timeInSecForIosWeb: 2,
+                            backgroundColor: Colors.red,
+                            textColor: Colors.white,
+                            fontSize: 16.0,
+                          );
+                        });
                       }
                     },
                     icon: const Icon(Icons.update),

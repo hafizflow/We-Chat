@@ -31,6 +31,26 @@ class APIs {
     return (await fireStore.collection("users").doc(user.uid).get()).exists;
   }
 
+  // for adding an chat for out conversation
+  static Future<bool> addChatUser(String email) async {
+    final data = await fireStore
+        .collection("users")
+        .where('email', isEqualTo: email)
+        .get();
+
+    if (data.docs.isNotEmpty && data.docs.first.id != user.uid) {
+      fireStore
+          .collection('users')
+          .doc(user.uid)
+          .collection('my_users')
+          .doc(data.docs.first.id)
+          .set({});
+      return true;
+    } else {
+      return false;
+    }
+  }
+
   // for getting self info
   static Future<void> getSelfInfo() async {
     await fireStore.collection("users").doc(user.uid).get().then((user) async {

@@ -3,9 +3,10 @@ import 'dart:developer';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:gallery_saver_updated/gallery_saver.dart';
 import 'package:we_chat/api/api.dart';
-import 'package:we_chat/helper/dialogs.dart';
 import 'package:we_chat/helper/my_date_util.dart';
 import 'package:we_chat/main.dart';
 
@@ -74,7 +75,7 @@ class _MessageCardState extends State<MessageCard> {
                       fit: BoxFit.cover,
                       placeholder: (context, url) => const Padding(
                         padding: EdgeInsets.all(8.0),
-                        child: CircularProgressIndicator(strokeWidth: 2),
+                        child: SpinKitSpinningLines(color: Colors.teal),
                       ),
                       imageUrl: widget.message.msg,
                       errorWidget: (context, url, error) => const Icon(
@@ -176,7 +177,7 @@ class _MessageCardState extends State<MessageCard> {
                       fit: BoxFit.cover,
                       placeholder: (context, url) => const Padding(
                         padding: EdgeInsets.all(8.0),
-                        child: CircularProgressIndicator(strokeWidth: 2),
+                        child: SpinKitSpinningLines(color: Colors.teal),
                       ),
                       imageUrl: widget.message.msg,
                       errorWidget: (context, url, error) => const Icon(
@@ -235,7 +236,15 @@ class _MessageCardState extends State<MessageCard> {
                             // for hiding bottom sheet
                             Navigator.pop(context);
 
-                            Dialogs.showSnackbar(context, 'Text Coped!');
+                            Fluttertoast.showToast(
+                              msg: "Text copied to clipboard",
+                              toastLength: Toast.LENGTH_SHORT,
+                              gravity: ToastGravity.CENTER,
+                              timeInSecForIosWeb: 2,
+                              backgroundColor: Colors.red,
+                              textColor: Colors.white,
+                              fontSize: 16.0,
+                            );
                           },
                         );
                       },
@@ -258,7 +267,15 @@ class _MessageCardState extends State<MessageCard> {
                             Navigator.pop(context);
 
                             if (success != null && success) {
-                              Dialogs.showSnackbar(context, 'Saved to gallery');
+                              Fluttertoast.showToast(
+                                msg: "Saved to Gallery",
+                                toastLength: Toast.LENGTH_SHORT,
+                                gravity: ToastGravity.CENTER,
+                                timeInSecForIosWeb: 2,
+                                backgroundColor: Colors.red,
+                                textColor: Colors.white,
+                                fontSize: 16.0,
+                              );
                             }
                           });
                         } catch (e) {
@@ -303,7 +320,15 @@ class _MessageCardState extends State<MessageCard> {
                       // for hiding bottom sheet
                       Navigator.pop(context);
 
-                      Dialogs.showSnackbar(context, 'Message Deleted');
+                      Fluttertoast.showToast(
+                        msg: "Message Deleted",
+                        toastLength: Toast.LENGTH_SHORT,
+                        gravity: ToastGravity.CENTER,
+                        timeInSecForIosWeb: 2,
+                        backgroundColor: Colors.red,
+                        textColor: Colors.white,
+                        fontSize: 16.0,
+                      );
                     });
                   },
                 ),
@@ -399,7 +424,17 @@ class _MessageCardState extends State<MessageCard> {
             minWidth: 0,
             onPressed: () {
               Navigator.pop(context);
-              APIs.editMessage(widget.message, updatedMessage);
+              APIs.editMessage(widget.message, updatedMessage).then((_) {
+                Fluttertoast.showToast(
+                  msg: "Message Edited",
+                  toastLength: Toast.LENGTH_SHORT,
+                  gravity: ToastGravity.CENTER,
+                  timeInSecForIosWeb: 2,
+                  backgroundColor: Colors.red,
+                  textColor: Colors.white,
+                  fontSize: 16.0,
+                );
+              });
             },
             child: const Text(
               'Update',

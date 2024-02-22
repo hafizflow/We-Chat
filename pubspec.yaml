@@ -50,6 +50,12 @@ dependencies:
   # for saving image to gallery
   gallery_saver_updated: ^3.0.0
 
+  # for showing toast message
+  fluttertoast: ^8.2.4
+
+  # for progress show
+  flutter_spinkit: ^5.2.0
+
 
 dev_dependencies:
   flutter_test:

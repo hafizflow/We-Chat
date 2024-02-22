@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:we_chat/api/api.dart';
 import 'package:we_chat/helper/dialogs.dart';
 import 'package:we_chat/main.dart';
@@ -38,8 +39,8 @@ class _LoginScreenState extends State<LoginScreen> {
         Navigator.pop(context);
 
         if (user != null) {
-          log("\nUser: ${user.user}");
-          log("\nUserAdditionalInfo: ${user.additionalUserInfo}");
+          // log("\nUser: ${user.user}");
+          // log("\nUserAdditionalInfo: ${user.additionalUserInfo}");
 
           if ((await APIs.userExists())) {
             if (mounted) {
@@ -88,7 +89,15 @@ class _LoginScreenState extends State<LoginScreen> {
     } catch (e) {
       log('\n_signInWithGoogle: $e');
       if (mounted) {
-        Dialogs.showSnackbar(context, "Something Went Wrong (Check Internet!)");
+        Fluttertoast.showToast(
+          msg: "Something Went Wrong (Check Internet!)",
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.CENTER,
+          timeInSecForIosWeb: 2,
+          backgroundColor: Colors.red,
+          textColor: Colors.white,
+          fontSize: 16.0,
+        );
       }
       return null;
     }
