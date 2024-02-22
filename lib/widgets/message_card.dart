@@ -274,7 +274,14 @@ class _MessageCardState extends State<MessageCard> {
                     size: 26,
                   ),
                   name: "Delete Message",
-                  onTap: () {},
+                  onTap: () async {
+                    await APIs.deleteMessage(widget.message).then((value) {
+                      // for hiding bottom sheet
+                      Navigator.pop(context);
+
+                      Dialogs.showSnackbar(context, 'Message Deleted');
+                    });
+                  },
                 ),
 
               Divider(

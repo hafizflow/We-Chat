@@ -259,4 +259,15 @@ class APIs {
       log('\nErrorMessage: $e');
     }
   }
+
+  static Future<void> deleteMessage(Message message) async {
+    await fireStore
+        .collection('chats/${getConversationId(message.toId)}/messages')
+        .doc(message.sent)
+        .delete();
+
+    if (message.type == Type.image) {
+      await storage.refFromURL(message.msg).delete();
+    }
+  }
 }
