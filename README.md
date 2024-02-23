@@ -10,7 +10,8 @@
 - Simple User Profile (with Photo, About, Last-seen, Created-at)
 - Message Read Status (sent & seen time) 
 - Message Delete & Edit Feature
-- Save image to gellary
+- Text copy to clipboard 
+- Save image to gellary and sent multiple image at a time
 - Decent UI with New Material Widgets
 - Member searching in searchbar
 - And Much More....
